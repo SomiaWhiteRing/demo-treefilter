@@ -1,18 +1,29 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <el-card class="box-card" style="margin-top: 10px">
+      <TreeFilter :object="filter" />
+    </el-card>
+    <el-card class="box-card" style="text-align: left">
+      <pre>{{ filter }}</pre>
+    </el-card>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import TreeFilter from '@/components/TreeFilter.vue'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    TreeFilter
+  },
+  data () {
+    return {
+      filter: {
+        rules: '且',
+        list: [{ type: 'condition', name: '', symbol: '', rules: '' }]
+      }
+    }
   }
 }
 </script>

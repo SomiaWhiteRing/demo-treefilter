@@ -1,9 +1,8 @@
 <template>
   <div class="item">
     <div class="base">
-      <el-radio-group v-model="object.rules" size="small">
-        <el-radio-button label="且"></el-radio-button>
-        <el-radio-button label="或"></el-radio-button>
+      <el-radio-group v-model="object.relationShow" size="small" @change="changeLabel">
+        <el-radio-button v-for="(item, index) in relations" :key="index" :label="item.label"></el-radio-button>
       </el-radio-group>
     </div>
     <el-row>
@@ -31,7 +30,7 @@
             <el-option v-for="(item, index) in symbols" :key="index" :label="item.label" :value="item.value"> </el-option>
           </el-select>
           <el-input
-            v-model="item.rules"
+            v-model="item.rule"
             size="small"
             style="width: 200px; margin: 0 10px"
             placeholder="请输入规则"
@@ -78,9 +77,22 @@ export default {
       type: Object,
       default () {
         return {
-          rules: '且',
-          list: [{ type: 'condition', name: '', symbol: '', rules: '' }]
+          relation: '&&',
+          relationShow: '且',
+          list: [{ type: 'condition', name: '', symbol: '', rule: '' }]
         }
+      }
+    },
+    relations: {
+      type: Array,
+      default () {
+        return [{
+          label: '且',
+          value: '&&'
+        }, {
+          label: '或',
+          value: '||'
+        }]
       }
     },
     filterIndex: {
@@ -91,8 +103,8 @@ export default {
       type: Array,
       default () {
         return [
-          { label: '名称', value: '名称' },
-          { label: '地区', value: '地区' },
+          { label: '名称', value: 'name' },
+          { label: '地区', value: 'place' },
           { label: 'ID', value: 'ID' }
         ]
       }
@@ -122,19 +134,28 @@ export default {
     deleteItem (filterIndex) {
       this.object.list.splice(filterIndex, 1)
     },
+    changeLabel (label) {
+      this.relations.forEach(item => {
+        if (item.label === label) {
+          this.object.relationShow = item.label
+          this.object.relation = item.value
+        }
+      })
+    },
     addChild (index) {
       this.object.list.splice(index + 1, 0, {
         name: '',
         symbol: '',
-        rules: '',
+        rule: '',
         type: 'condition'
       })
     },
     addBranch (index) {
       this.object.list.splice(index + 1, 0, {
-        rules: '且',
+        relation: this.relations[0].value,
+        relationShow: this.relations[0].label,
         type: 'group',
-        list: [{ name: '', symbol: '', rules: '', type: 'condition' }]
+        list: [{ name: '', symbol: '', rule: '', type: 'condition' }]
       })
     }
   }

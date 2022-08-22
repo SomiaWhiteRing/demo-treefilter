@@ -16,7 +16,7 @@
             v-model="item.name"
             size="small"
             style="width: 120px"
-            placeholder="请选择"
+            :placeholder="namePlaceholder"
           >
             <el-option v-for="(item, index) in names" :key="index" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -24,8 +24,8 @@
           <el-select
             v-model="item.symbol"
             size="small"
-            placeholder="请选择"
             style="margin-left: 10px; width: 100px"
+            :placeholder="symbolPlaceholder"
           >
             <el-option v-for="(item, index) in symbols" :key="index" :label="item.label" :value="item.value"> </el-option>
           </el-select>
@@ -33,7 +33,7 @@
             v-model="item.rule"
             size="small"
             style="width: 200px; margin: 0 10px"
-            placeholder="请输入规则"
+            :placeholder="rulePlaceholder"
           ></el-input>
           <el-button
             size="small"
@@ -73,6 +73,10 @@
 export default {
   name: 'TreeFilter',
   props: {
+    filterIndex: {
+      type: Number,
+      default: -1
+    },
     object: {
       type: Object,
       default () {
@@ -81,6 +85,16 @@ export default {
           relationShow: '且',
           list: [{ type: 'condition', name: '', symbol: '', rule: '' }]
         }
+      }
+    },
+    names: {
+      type: Array,
+      default () {
+        return [
+          { label: '名称', value: 'name' },
+          { label: '地区', value: 'place' },
+          { label: 'ID', value: 'ID' }
+        ]
       }
     },
     relations: {
@@ -95,20 +109,6 @@ export default {
         }]
       }
     },
-    filterIndex: {
-      type: Number,
-      default: -1
-    },
-    names: {
-      type: Array,
-      default () {
-        return [
-          { label: '名称', value: 'name' },
-          { label: '地区', value: 'place' },
-          { label: 'ID', value: 'ID' }
-        ]
-      }
-    },
     symbols: {
       type: Array,
       default () {
@@ -121,6 +121,18 @@ export default {
           { label: '不等于', value: '!=' }
         ]
       }
+    },
+    namePlaceholder: {
+      type: String,
+      default: '请选择'
+    },
+    symbolPlaceholder: {
+      type: String,
+      default: '请选择'
+    },
+    rulePlaceholder: {
+      type: String,
+      default: '请输入规则'
     }
   },
   methods: {
